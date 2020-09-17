@@ -26,12 +26,12 @@ include sources.mk
 
 ifeq ($(PLATFORM),HOST)
 		CC = gcc
-		LD = ld
+		LD = gcc
 		LDFLAGS =  
 		OBJDUMP = objdump
 else
 		CC = arm-none-eabi-gcc
-		LD = arm-none-eabi-ld
+		LD = arm-none-eabi-gcc
 		LINKER_FILE = ../msp432p401r.lds
 		LDFLAGS = -T $(LINKER_FILE)
 		CPU = cortex-m4
@@ -41,7 +41,7 @@ else
 endif
 
 TARGET = c1m2
-CFLAGS = -Wall -Werror -g -O0 -std=c99 -D$(PLATFORM) $(ARMFLAGS) 
+CFLAGS = -Wall -Werror -g -O0 -std=c99 -D$(PLATFORM) $(ARMFLAGS)
 CPPFLAGS = -E
 
 OBJS = $(SOURCES:.c=.o)
@@ -52,7 +52,7 @@ DEPS = $(SOURCES:.c=.d)
 all: build
 
 $(TARGET).out : $(OBJS)
-	$(LD) -lc $^ -o $@ $(LDFLAGS)
+	$(LD) -lc $^ -o $@ $(LDFLAGS) $(CFLAGS)
 
 %.o : %.c
 	$(CC) -o $@ -c $< $(INCLUDES) $(CFLAGS)
@@ -82,29 +82,3 @@ info:
 clear: 
 	rm $(TARGET).out $(OBJS) $(ASMS) $(PREPRO) $(DEPS) $(TARGET).asm \
 		$(TARGET).map
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
